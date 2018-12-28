@@ -1,4 +1,4 @@
-set function_name=aws-code-index-stream-bulk-load
+set function_name=aws-read-s3-es-events-in-chunks
 title %function_name%
 
 call cd .\tests
