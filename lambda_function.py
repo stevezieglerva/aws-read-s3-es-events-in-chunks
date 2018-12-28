@@ -20,14 +20,15 @@ def lambda_handler(event, context):
 		else:
 			log = setup_logging("aws-code-index-stream-bulk-load", event, aws_request_id)
 
-
+		#read_chunk_of_s3_files("bucket", 100)
 
 		print("Finished")
 
 	except Exception as e:
-		log.exception()
+		#log.exception()
 		print("Exception: "+ str(e))
 		raise(e)
+		return {"msg" : "Exception"}
 
 	return {"msg" : "Success"}
 

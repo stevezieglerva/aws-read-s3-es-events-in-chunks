@@ -7,9 +7,14 @@ import json
 
 class TestMethods(unittest.TestCase):
 
-	def test_sample_test(self):
+	def test_lambda_handler__no_inputs__success(self):
 		# Arrange
-		self.assertEqual(1, 1)
+
+		# Act
+		result = lambda_handler("", None)
+
+		# Arrange
+		self.assertEqual(result["msg"], "Success")
 
 
 if __name__ == '__main__':
