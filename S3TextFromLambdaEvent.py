@@ -98,14 +98,11 @@ def create_s3_text_file(bucket, key, file_text, s3_boto):
 
 
 def get_files_from_bucket_directory(bucket_name, directory_prefix, s3_boto, chunk_size = 1000):
-	print("***")
-	print(chunk_size)
 	bucket = s3_boto.Bucket(bucket_name)
 	file_urls = []
 	for object_summary in bucket.objects.filter(Prefix=directory_prefix).limit(chunk_size):
 		key = object_summary.key
 		file_url = get_bucket_file_url(bucket_name, key)
-		print(file_url)
 		file_urls.append(file_url)
 	file_text = get_file_text_from_s3_urls(file_urls, s3_boto)
 		
