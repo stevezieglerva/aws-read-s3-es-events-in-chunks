@@ -6,6 +6,7 @@ import structlog
 import os
 import json
 import sys
+from S3TextFromLambdaEvent import *
 
 
 
@@ -19,10 +20,12 @@ def lambda_handler(event, context):
 		if "text_logging" in os.environ:
 			log = structlog.get_logger()
 		else:
-			log = setup_logging("aws-code-index-stream-bulk-load", event, aws_request_id)
+			log = setup_logging("aws-read-s3-es-events-in-chunks", event, aws_request_id)
 
-		#read_chunk_of_s3_files("bucket", 100)
-
+		s3 = boto3.resource("s3")
+		file_text = get_files_from_bucket_directory("code-index", "es-bulk-files-input/", s3, 100)
+		log.critical("process_results", file_count=len(file_text))
+		log.critical("finished")
 		print("Finished")
 
 	except Exception as e:
@@ -32,8 +35,6 @@ def lambda_handler(event, context):
 		return {"msg" : "Exception" }
 
 	return {"msg" : "Success"}
-
-
 
 
 def setup_logging(lambda_name, lambda_event, aws_request_id):
@@ -66,3 +67,5 @@ def setup_logging(lambda_name, lambda_event, aws_request_id):
 
 	return log
 
+def read_chunk_of_s3_files(bucket_name, chunk_size):
+	test = 1
