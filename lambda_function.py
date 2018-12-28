@@ -5,6 +5,7 @@ import logging
 import structlog
 import os
 import json
+import sys
 
 
 
@@ -28,7 +29,7 @@ def lambda_handler(event, context):
 		#log.exception()
 		print("Exception: "+ str(e))
 		raise(e)
-		return {"msg" : "Exception"}
+		return {"msg" : "Exception" }
 
 	return {"msg" : "Success"}
 
