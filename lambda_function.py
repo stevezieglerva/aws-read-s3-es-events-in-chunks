@@ -98,9 +98,6 @@ def format_for_es_bulk(file_text):
 		print("\nConverting bulk file: " + file)
 
 		if "_index" in file_text[file]:
-			if "'" in file_text[file]:
-				raise("Where did that quote come from???")
-
 			log_item = json.loads(file_text[file])
 			print("Log item: " + str(log_item))
 			print(type(log_item))
