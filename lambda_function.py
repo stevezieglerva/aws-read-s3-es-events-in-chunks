@@ -24,8 +24,8 @@ def lambda_handler(event, context):
 			log = setup_logging("aws-read-s3-es-events-in-chunks", event, aws_request_id)
 
 		s3 = boto3.resource("s3")
-		chunk_size = 100
-		
+		chunk_size = 1000
+
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
 		log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
@@ -36,8 +36,8 @@ def lambda_handler(event, context):
 		response = esl.load_bulk_data(es_bulk_data)
 		print("bulk_data_response: ")
 		print(json.dumps(response, indent=3))
-		if response["errors"] == True:
-			raise Exception("Bulk didn't load")
+		#if response["errors"] == True:
+		#	raise Exception("Bulk didn't load")
 
 		file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 		delete_file_urls(file_urls, s3)
@@ -46,7 +46,7 @@ def lambda_handler(event, context):
 		print("Finished")
 
 	except Exception as e:
-		#log.exception()
+		log.exception()
 		print("Exception: "+ str(e))
 		raise(e)
 		return {"msg" : "Exception" }
