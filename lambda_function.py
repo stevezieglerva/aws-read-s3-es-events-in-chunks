@@ -24,7 +24,8 @@ def lambda_handler(event, context):
 			log = setup_logging("aws-read-s3-es-events-in-chunks", event, aws_request_id)
 
 		s3 = boto3.resource("s3")
-		chunk_size = 10
+		chunk_size = 100
+		
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
 		log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
