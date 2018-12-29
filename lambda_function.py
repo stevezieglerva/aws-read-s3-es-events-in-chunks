@@ -44,8 +44,10 @@ def lambda_handler(event, context):
 			file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 			delete_file_urls(file_urls, s3)
 			log.critical("process_results", file_count=len(file_text))
-			log.critical("finished")
-			print("Finished")
+		else:
+			print("Skpping since only " + str(len(file_text)) + " files available")
+		log.critical("finished")
+		print("Finished")
 
 	except Exception as e:
 		log.exception()
