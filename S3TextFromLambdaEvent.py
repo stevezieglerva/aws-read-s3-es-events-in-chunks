@@ -104,6 +104,27 @@ def get_files_from_bucket_directory(bucket_name, directory_prefix, s3_boto, chun
 		key = object_summary.key
 		file_url = get_bucket_file_url(bucket_name, key)
 		file_urls.append(file_url)
+	return file_urls
+
+def get_files_text_from_bucket_directory(bucket_name, directory_prefix, s3_boto, chunk_size = 1000):
+	file_urls = get_files_from_bucket_directory(bucket_name, directory_prefix, s3_boto, chunk_size)
 	file_text = get_file_text_from_s3_urls(file_urls, s3_boto)
-		
 	return file_text
+
+def delete_file_urls(file_urls_array, s3_boto):
+	count = 0
+	for url in file_urls_array:
+		count = count + 1
+		bucket = get_bucket_name_from_url(url)
+		key = get_key_from_url(url)
+		try:
+			object = s3_boto.Object(bucket, key)
+			result = object.delete()
+		except Exception as e:
+			print("*** Exception")
+			log = structlog.get_logger()
+			log.execption()
+			raise(e)
+	return count
+
+

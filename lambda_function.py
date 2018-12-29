@@ -23,7 +23,13 @@ def lambda_handler(event, context):
 			log = setup_logging("aws-read-s3-es-events-in-chunks", event, aws_request_id)
 
 		s3 = boto3.resource("s3")
-		file_text = get_files_from_bucket_directory("code-index", "es-bulk-files-input/", s3, 100)
+		chunk_size = 100
+		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
+		log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
+
+
+		file_urls = extract_s3_url_list_from_file_text_dict(file_text)
+		delete_file_urls(file_urls, s3)
 		log.critical("process_results", file_count=len(file_text))
 		log.critical("finished")
 		print("Finished")
@@ -67,5 +73,6 @@ def setup_logging(lambda_name, lambda_event, aws_request_id):
 
 	return log
 
-def read_chunk_of_s3_files(bucket_name, chunk_size):
-	test = 1
+def extract_s3_url_list_from_file_text_dict(file_texts):
+	return file_texts.keys()
+
