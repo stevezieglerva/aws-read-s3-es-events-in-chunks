@@ -85,16 +85,20 @@ def format_for_es_bulk(file_text):
 	bulk_format_template = "{{\"_index\":{0}\", \"_type\":\"doc\", \"_id\":\"{1}\"}} \n{2}"
 	bulk_data = ""
 	for file in file_text.keys():
-		log_item = file_text[file]
-		print("\n\nFile:")
-		print(file)
-		if "_index" in log_item:
+		print("\nConverting bulk file: " + file)
+
+		if "_index" in file_text[file]:
+			log_item = json.loads(file_text[file])
+			print("Log item: " + str(log_item))
+			print(type(log_item))
 			index = log_item["_index"]
 			id = log_item["_id"]
 			data = log_item["data"]
-			print(index)
-			print(id)
+			print("\t" + index)
 			new_bulk_item = bulk_format_template.format(index, id, data)
 			bulk_data = bulk_data + new_bulk_item + "\n"
+			print("\tAdded to bulk")
+		else:
+			print("Skipping: " + file)
 
 	return bulk_data
