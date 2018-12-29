@@ -18,7 +18,7 @@ class TestMethods(unittest.TestCase):
 		print("Result=" + result)
 
 		# Assert
-		self.assertTrue("{ \"index\" : { \"_index\":\"aws_lambda_logs\", \"_type\":\"doc\", \"_id\":\"\"} }" in result)
+		self.assertTrue("{ \"index\" : { \"_index\":\"aws_lambda_logs\", \"_type\":\"doc\"} }" in result)
 		self.assertEqual(result.count("\n"), 2)
 
 

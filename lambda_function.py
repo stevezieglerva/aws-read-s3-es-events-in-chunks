@@ -30,8 +30,13 @@ def lambda_handler(event, context):
 
 		es_bulk_data = format_for_es_bulk(file_text)
 		create_s3_text_file("code-index", "es-bulk-files-output/es_bulk.json", es_bulk_data, s3)
+		print("\n\n\Bulk data string:" + es_bulk_data)
 		esl = ESLambdaLog()
 		response = esl.load_bulk_data(es_bulk_data)
+		print("bulk_data_response: ")
+		print(json.dumps(response, indent=3))
+		if response["errors"] == True:
+			raise Exception("Bulk didn't load")
 
 		file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 		delete_file_urls(file_urls, s3)
@@ -86,7 +91,7 @@ def format_for_es_bulk(file_text):
 	#{"index":{"_index":"brain3", "_type":"doc", "_id":"c--Users-18589-.sdfsd"}
 	#{"brain_type" : "file", "title" : ".aws", "desc" : "c:\\Users\\pop\\.sdfds", "date" : "08/27/2018", "date_date-month" : "08", "date_date-day" : "27", "date_date-year" : "2018", "@timestamp":"2018-08-27T00:00:00", "bytes" : "<DIR>", "dir-eg" : "c:\\Users\\pop", "file" : ".aws", "ext" : "aws", "source" : "file-c:\\Users\\pop\\.sdfsds"}
 
-	bulk_format_template = "{{ \"index\" : {{ \"_index\":\"{0}\", \"_type\":\"doc\", \"_id\":\"{1}\"}} }}\n{2}"
+	bulk_format_template = "{{ \"index\" : {{ \"_index\":\"{0}\", \"_type\":\"doc\"}} }}\n{2}"
 	bulk_data = ""
 	for file in file_text.keys():
 		print("\nConverting bulk file: " + file)
@@ -103,11 +108,12 @@ def format_for_es_bulk(file_text):
 			data = log_item["data"]
 			print("data:")
 			print(data)
+			data_str = json.dumps(data)
+			print("data_str:")
 			print("\t" + index)
-			new_bulk_item = bulk_format_template.format(index, id, data)
+			new_bulk_item = bulk_format_template.format(index, id, data_str)
 			bulk_data = bulk_data + new_bulk_item + "\n"
 			print("\tAdded to bulk")
 		else:
 			print("Skipping: " + file)
-
 	return bulk_data
