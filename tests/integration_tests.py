@@ -89,6 +89,23 @@ class TestMethods(unittest.TestCase):
 		self.assertEqual(result, 2)
 
 
+
+	def test_check_no_single_quotes(self):
+		# Arrange
+		s3 = boto3.resource("s3")
+		create_s3_text_file("code-index", "integration_test_single_quotes.json", "{\"hello\" : \"world\"}", s3)
+		file_url_array = ["http://s3.amazonaws.com/code-index/integration_test_single_quotes.json"]
+
+		# Act
+		file_text = get_file_text_from_s3_urls(file_url_array, s3)
+		print("***file_text:")
+		print(file_text)
+
+		# Arrange
+		result = file_text["http://s3.amazonaws.com/code-index/integration_test_single_quotes.json"]
+		self.assertEqual(result, "{\"hello\" : \"world\"}")
+
+
 if __name__ == '__main__':
 	unittest.main()		
 

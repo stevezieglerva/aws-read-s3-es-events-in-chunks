@@ -57,5 +57,6 @@ class ESLambdaLog:
 		return list
 
 	def load_bulk_data(self, bulk_data_string):
-		response = self.es.bulk(body=bulk_data_string)
+		if bulk_data_string != "":
+			response = self.es.bulk(body=bulk_data_string)
 		return response

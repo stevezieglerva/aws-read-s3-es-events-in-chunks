@@ -7,6 +7,7 @@ import os
 import json
 import sys
 from S3TextFromLambdaEvent import *
+from ESLambdaLog import *
 
 
 
@@ -23,11 +24,14 @@ def lambda_handler(event, context):
 			log = setup_logging("aws-read-s3-es-events-in-chunks", event, aws_request_id)
 
 		s3 = boto3.resource("s3")
-		chunk_size = 100
+		chunk_size = 10
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
 		log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
 		es_bulk_data = format_for_es_bulk(file_text)
+		create_s3_text_file("code-index", "es-bulk-files-output/es_bulk.json", es_bulk_data, s3)
+		esl = ESLambdaLog()
+		response = esl.load_bulk_data(es_bulk_data)
 
 		file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 		delete_file_urls(file_urls, s3)
@@ -82,18 +86,23 @@ def format_for_es_bulk(file_text):
 	#{"index":{"_index":"brain3", "_type":"doc", "_id":"c--Users-18589-.sdfsd"}
 	#{"brain_type" : "file", "title" : ".aws", "desc" : "c:\\Users\\pop\\.sdfds", "date" : "08/27/2018", "date_date-month" : "08", "date_date-day" : "27", "date_date-year" : "2018", "@timestamp":"2018-08-27T00:00:00", "bytes" : "<DIR>", "dir-eg" : "c:\\Users\\pop", "file" : ".aws", "ext" : "aws", "source" : "file-c:\\Users\\pop\\.sdfsds"}
 
-	bulk_format_template = "{{\"_index\":{0}\", \"_type\":\"doc\", \"_id\":\"{1}\"}} \n{2}"
+	bulk_format_template = "{{ \"index\" : {{ \"_index\":\"{0}\", \"_type\":\"doc\", \"_id\":\"{1}\"}} }}\n{2}"
 	bulk_data = ""
 	for file in file_text.keys():
 		print("\nConverting bulk file: " + file)
 
 		if "_index" in file_text[file]:
+			if "'" in file_text[file]:
+				raise("Where did that quote come from???")
+
 			log_item = json.loads(file_text[file])
 			print("Log item: " + str(log_item))
 			print(type(log_item))
 			index = log_item["_index"]
 			id = log_item["_id"]
 			data = log_item["data"]
+			print("data:")
+			print(data)
 			print("\t" + index)
 			new_bulk_item = bulk_format_template.format(index, id, data)
 			bulk_data = bulk_data + new_bulk_item + "\n"
