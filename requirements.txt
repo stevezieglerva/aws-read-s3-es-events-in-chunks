@@ -1,2 +1,4 @@
 boto3
 structlog
+elasticsearch
+aws_requests_auth

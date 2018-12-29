@@ -22,27 +22,39 @@ class TestMethods(unittest.TestCase):
 		# Arrange
 		bucket = "code-index"
 		directory = "es-bulk-files-input"
-		chunk_size = 10
+		chunk_size = 5
 		s3 = boto3.resource("s3")
+		create_s3_text_file("code-index", directory + "/test_integration_a_1.txt", "file contents 1", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_2.txt", "file contents 2", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_3.txt", "file contents 3", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_4.txt", "file contents 4", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_5.txt", "file contents 5", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_6.txt", "file contents 6", s3)
 
 		# Act
-		result = get_files_from_bucket_directory(bucket, "es-bulk-files-input/", s3, 10)
+		result = get_files_from_bucket_directory(bucket, "es-bulk-files-input/", s3, chunk_size)
 
 		# Arrange
-		self.assertEqual(len(result), 10)
+		self.assertEqual(len(result), chunk_size)
 
 	def test_get_files_text_from_bucket_directory__bucket_has_files_10_chunk_size__file_text_returned(self):
 		# Arrange
 		bucket = "code-index"
 		directory = "es-bulk-files-input"
-		chunk_size = 10
+		chunk_size = 5
 		s3 = boto3.resource("s3")
+		create_s3_text_file("code-index", directory + "/test_integration_b_1.txt", "file contents 1", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_b_2.txt", "file contents 2", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_b_3.txt", "file contents 3", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_b_4.txt", "file contents 4", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_b_5.txt", "file contents 5", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_b_6.txt", "file contents 6", s3)
 
 		# Act
-		result = get_files_text_from_bucket_directory(bucket, "es-bulk-files-input/", s3, 10)
+		result = get_files_text_from_bucket_directory(bucket, "es-bulk-files-input/", s3, chunk_size)
 
 		# Arrange
-		self.assertEqual(len(result), 10)
+		self.assertEqual(len(result), chunk_size)
 
 	def test_delete_file_urls_from_bucket__valid_file_urls__file_deleted(self):
 		# Arrange

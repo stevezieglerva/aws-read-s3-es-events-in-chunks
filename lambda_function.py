@@ -27,6 +27,7 @@ def lambda_handler(event, context):
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
 		log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
+		es_bulk_data = format_for_es_bulk(file_text)
 
 		file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 		delete_file_urls(file_urls, s3)
@@ -76,3 +77,24 @@ def setup_logging(lambda_name, lambda_event, aws_request_id):
 def extract_s3_url_list_from_file_text_dict(file_texts):
 	return file_texts.keys()
 
+
+def format_for_es_bulk(file_text):
+	#{"index":{"_index":"brain3", "_type":"doc", "_id":"c--Users-18589-.sdfsd"}
+	#{"brain_type" : "file", "title" : ".aws", "desc" : "c:\\Users\\pop\\.sdfds", "date" : "08/27/2018", "date_date-month" : "08", "date_date-day" : "27", "date_date-year" : "2018", "@timestamp":"2018-08-27T00:00:00", "bytes" : "<DIR>", "dir-eg" : "c:\\Users\\pop", "file" : ".aws", "ext" : "aws", "source" : "file-c:\\Users\\pop\\.sdfsds"}
+
+	bulk_format_template = "{{\"_index\":{0}\", \"_type\":\"doc\", \"_id\":\"{1}\"}} \n{2}"
+	bulk_data = ""
+	for file in file_text.keys():
+		log_item = file_text[file]
+		print("\n\nFile:")
+		print(file)
+		if "_index" in log_item:
+			index = log_item["_index"]
+			id = log_item["_id"]
+			data = log_item["data"]
+			print(index)
+			print(id)
+			new_bulk_item = bulk_format_template.format(index, id, data)
+			bulk_data = bulk_data + new_bulk_item + "\n"
+
+	return bulk_data
