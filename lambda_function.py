@@ -100,19 +100,14 @@ def format_for_es_bulk(file_text):
 	bulk_data = ""
 	for file in file_text.keys():
 		print("\nConverting bulk file: " + file)
-
 		if "_index" in file_text[file]:
 			log_item = json.loads(file_text[file])
-			print("Log item: " + str(log_item))
-			print(type(log_item))
 			index = log_item["_index"]
 			id = log_item["_id"]
 			data = log_item["data"]
-			print("data:")
-			print(data)
+			local_time = LocalTime()
+			data["processed_for_bulk"] = local_time.get_utc_timestamp()
 			data_str = json.dumps(data)
-			print("data_str:")
-			print("\t" + index)
 			new_bulk_item = bulk_format_template.format(index, id, data_str)
 			bulk_data = bulk_data + new_bulk_item + "\n"
 			print("\tAdded to bulk")
