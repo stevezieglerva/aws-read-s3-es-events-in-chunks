@@ -25,7 +25,9 @@ def lambda_handler(event, context):
 			log = setup_logging("aws-read-s3-es-events-in-chunks", event, aws_request_id)
 
 		s3 = boto3.resource("s3")
-		chunk_size = 100
+		if "chunk_size" not in os.environ:
+			raise Exception("chunk_size environment variable not set")
+		chunk_size = int(os.environ['chunk_size'])
 
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
 

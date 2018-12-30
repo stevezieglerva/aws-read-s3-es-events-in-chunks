@@ -5,13 +5,14 @@ from lambda_function import *
 import json
 from S3TextFromLambdaEvent import *
 import json
+import os
 
 
 class TestMethods(unittest.TestCase):
 
 	def test_lambda_handler__no_inputs__success(self):
 		# Arrange
-
+		os.environ["chunk_size"] = "10"
 		# Act
 		result = lambda_handler("", None)
 
