@@ -28,7 +28,7 @@ def lambda_handler(event, context):
 
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
 
-		if len(file_text) > chunk_size:
+		if len(file_text) == chunk_size:
 			log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
 			es_bulk_data = format_for_es_bulk(file_text)
