@@ -106,7 +106,8 @@ def format_for_es_bulk(file_text):
 			id = log_item["_id"]
 			data = log_item["data"]
 			local_time = LocalTime()
-			data["processed_for_bulk"] = local_time.get_utc_timestamp()
+			data["processed_for_bulk_utc"] = local_time.get_utc_timestamp()
+			data["processed_for_bulk_local"] = local_time.get_local_timestamp()
 			data_str = json.dumps(data)
 			new_bulk_item = bulk_format_template.format(index, id, data_str)
 			bulk_data = bulk_data + new_bulk_item + "\n"

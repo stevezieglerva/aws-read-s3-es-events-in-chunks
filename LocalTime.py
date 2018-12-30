@@ -39,3 +39,6 @@ class LocalTime:
 	def get_utc_timestamp(self):
 		return self.utc.strftime("%Y-%m-%dT%H:%M:%S.%f")
 
+
+	def get_local_timestamp(self):
+		return self.local.strftime("%Y-%m-%dT%H:%M:%S.%f")
