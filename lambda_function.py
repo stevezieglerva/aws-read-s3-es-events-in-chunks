@@ -36,17 +36,17 @@ def lambda_handler(event, context):
 
 			es_bulk_data = format_for_es_bulk(file_text)
 			create_s3_text_file("code-index", "es-bulk-files-output/es_bulk_" + str(uuid.uuid4()) + " .json", es_bulk_data, s3)
-			print("\n\n\Bulk data string:" + es_bulk_data)
 			esl = ESLambdaLog()
 			response = esl.load_bulk_data(es_bulk_data)
 			print("bulk_data_response: ")
 			print(json.dumps(response, indent=3))
-			#if response["errors"] == True:
-			#	raise Exception("Bulk didn't load")
-
-			file_urls = extract_s3_url_list_from_file_text_dict(file_text)
-			delete_file_urls(file_urls, s3)
-			log.critical("process_results", file_count=len(file_text))
+			if response["errors"] == True:
+				log.critical("bulk_load_error")
+			else:
+				log.critical("bulk_load_successful")
+				file_urls = extract_s3_url_list_from_file_text_dict(file_text)
+				delete_file_urls(file_urls, s3)
+				log.critical("process_results", file_count=len(file_text))
 		else:
 			print("Skpping since only " + str(len(file_text)) + " files available")
 		log.critical("finished")

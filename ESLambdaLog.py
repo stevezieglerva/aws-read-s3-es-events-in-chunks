@@ -11,7 +11,7 @@ import structlog
 class ESLambdaLog:
 	def __init__(self, index_name = "aws_lambda_start"):
 		self.index_name = index_name + "." + self.get_index_name_timestamp_label()
-		es_host = 'search-ziegler-es-bnlsbjliclp6ebc67fu3mfr74u.us-east-1.es.amazonaws.com'
+		es_host = 'search-ziegler-es-2019-miciyc72drpjrdpfmlsxbr7yfq.us-east-1.es.amazonaws.com'
 		auth = BotoAWSRequestsAuth(aws_host=es_host,
 											aws_region='us-east-1',
 											aws_service='es')
