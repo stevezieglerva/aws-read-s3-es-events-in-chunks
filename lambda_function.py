@@ -29,8 +29,12 @@ def lambda_handler(event, context):
 			raise Exception("chunk_size environment variable not set")
 		chunk_size = int(os.environ['chunk_size'])
 
+		shard = ""
+		if "shard" in os.environ:
+			shard = os.environ["shard"] + "/"
+
 		print("Getting files to check chunk size")
-		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
+		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/" + shard, s3, chunk_size)
 		print("Finished getting files")
 		if len(file_text) == chunk_size:
 			log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
