@@ -49,6 +49,7 @@ def lambda_handler(event, context):
 				log.critical("process_results", file_count=len(file_text))
 		else:
 			print("Skpping since only " + str(len(file_text)) + " files available")
+			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
 		log.critical("finished")
 		print("Finished")
 
