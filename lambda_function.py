@@ -127,8 +127,8 @@ def format_for_es_bulk(file_text):
 			data_str = json.dumps(data)
 			new_bulk_item = bulk_format_template.format(index, id, data_str)
 			bulk_data = bulk_data + new_bulk_item + "\n"
-			#log.critical("bulk_conversion", file=file)
+			# log.critical("bulk_conversion", file=file)
 		else:
 			print("Skipping: " + file)
-			log.critical("bulk_conversion_skipped", file=file)
+			# log.critical("bulk_conversion_skipped", file=file)
 	return bulk_data
