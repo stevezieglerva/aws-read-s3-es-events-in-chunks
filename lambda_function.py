@@ -99,6 +99,7 @@ def extract_s3_url_list_from_file_text_dict(file_texts):
 def format_for_es_bulk(file_text):
 	#{"index":{"_index":"brain3", "_type":"doc", "_id":"c--Users-18589-.sdfsd"}
 	#{"brain_type" : "file", "title" : ".aws", "desc" : "c:\\Users\\pop\\.sdfds", "date" : "08/27/2018", "date_date-month" : "08", "date_date-day" : "27", "date_date-year" : "2018", "@timestamp":"2018-08-27T00:00:00", "bytes" : "<DIR>", "dir-eg" : "c:\\Users\\pop", "file" : ".aws", "ext" : "aws", "source" : "file-c:\\Users\\pop\\.sdfsds"}
+	log = structlog.get_logger()
 
 	bulk_format_template = "{{ \"index\" : {{ \"_index\" : \"{0}\", \"_type\" : \"doc\", \"_id\" : \"{1}\"}} }}\n{2}"
 	bulk_data = ""
@@ -116,6 +117,8 @@ def format_for_es_bulk(file_text):
 			new_bulk_item = bulk_format_template.format(index, id, data_str)
 			bulk_data = bulk_data + new_bulk_item + "\n"
 			print("\tAdded to bulk")
+			log.critical("bulk_conversion", file=file)
 		else:
 			print("Skipping: " + file)
+			log.critical("bulk_conversion_skipped", file=file)
 	return bulk_data
