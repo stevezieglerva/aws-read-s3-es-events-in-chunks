@@ -29,8 +29,8 @@ def lambda_handler(event, context):
 			raise Exception("chunk_size environment variable not set")
 		chunk_size = int(os.environ['chunk_size'])
 
+		print("Checking chunk size")
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/", s3, chunk_size)
-
 		if len(file_text) == chunk_size:
 			log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
@@ -127,7 +127,7 @@ def format_for_es_bulk(file_text):
 			data_str = json.dumps(data)
 			new_bulk_item = bulk_format_template.format(index, id, data_str)
 			bulk_data = bulk_data + new_bulk_item + "\n"
-			log.critical("bulk_conversion", file=file)
+			#log.critical("bulk_conversion", file=file)
 		else:
 			print("Skipping: " + file)
 			log.critical("bulk_conversion_skipped", file=file)
