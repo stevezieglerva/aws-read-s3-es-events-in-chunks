@@ -49,12 +49,13 @@ def lambda_handler(event, context):
 					bulk_load_http_status[http_group] = bulk_load_http_status[http_group] + 1
 				else:
 					bulk_load_http_status[http_group] = 1
+				if http_group != "200":
+					log.critical("bulk_index_item_failed", http_status_range=http_group, indexed_item=json.dumps(index_result))
 			for check in ["100", "200", "300", "400", "500"]:
 				if check not in bulk_load_http_status:
 					bulk_load_http_status[check] = 0
-				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])
+				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])					
 			print(bulk_load_http_status)
-
 
 			if response["errors"] == True:
 				log.critical("bulk_load_error")
