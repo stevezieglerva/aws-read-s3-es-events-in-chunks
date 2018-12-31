@@ -46,7 +46,7 @@ def get_file_text_from_s3_bucket_and_key(s3_file_url_dict, s3_boto):
 				# given the distributed nature of the Lambdas, the requested key might not exist. Set file text to ""
 				# leave that file out of the dictionary
 				log = structlog.get_logger()
-				log.warning("Warning: can't find " + bucket_name + "/" + key )
+				log.warning("s3_not_found_to_read", desc="Warning: can't find " + bucket_name + "/" + key )
 			else:
 				raise(e)
 	return file_texts

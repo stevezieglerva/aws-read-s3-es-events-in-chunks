@@ -38,12 +38,22 @@ def lambda_handler(event, context):
 			create_s3_text_file("code-index", "es-bulk-files-output/es_bulk_" + str(uuid.uuid4()) + " .json", es_bulk_data, s3)
 			esl = ESLambdaLog()
 			response = esl.load_bulk_data(es_bulk_data)
-			print("bulk_data_response: ")
-			print(json.dumps(response, indent=3))
+			#print("bulk_data_response: ")
+			#print(json.dumps(response, indent=3))
+
+			bulk_load_http_status = {}
+			for index_result in response["items"]:
+				http_status = index_result["index"]["status"]
+				if http_status in bulk_load_http_status:
+					bulk_load_http_status[http_status] = bulk_load_http_status[http_status] + 1
+				else:
+					bulk_load_http_status[http_status] = 1
+			print(bulk_load_http_status)
+
 			if response["errors"] == True:
-				log.critical("bulk_load_error")
+				log.critical("bulk_load_error", bulk_load_http_status=bulk_load_http_status)
 			else:
-				log.critical("bulk_load_successful")
+				log.critical("bulk_load_successful", bulk_load_http_status=bulk_load_http_status)
 				file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 				delete_file_urls(file_urls, s3)
 				log.critical("process_results", file_count=len(file_text))
