@@ -56,14 +56,9 @@ def lambda_handler(event, context):
 			for check in ["100", "200", "300", "400", "500"]:
 				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])					
 			print(bulk_load_http_status)
-
-			if response["errors"] == True:
-				log.critical("bulk_load_error")
-			else:
-				log.critical("bulk_load_successful")
-				file_urls = extract_s3_url_list_from_file_text_dict(file_text)
-				delete_file_urls(file_urls, s3)
-				log.critical("process_results", file_count=len(file_text))
+			file_urls = extract_s3_url_list_from_file_text_dict(file_text)
+			delete_file_urls(file_urls, s3)
+			log.critical("process_results", file_count=len(file_text))
 		else:
 			print("Skpping since only " + str(len(file_text)) + " files available")
 			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
