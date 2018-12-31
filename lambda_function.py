@@ -44,16 +44,22 @@ def lambda_handler(event, context):
 			bulk_load_http_status = {}
 			for index_result in response["items"]:
 				http_status = index_result["index"]["status"]
+				http_group = str(http_status)[0] + "00"
 				if http_status in bulk_load_http_status:
-					bulk_load_http_status[http_status] = bulk_load_http_status[http_status] + 1
+					bulk_load_http_status[http_group] = bulk_load_http_status[http_group] + 1
 				else:
-					bulk_load_http_status[http_status] = 1
+					bulk_load_http_status[http_group] = 1
+			for check in ["100", "200", "300", "400", "500"]:
+				if check not in bulk_load_http_status:
+					bulk_load_http_status[check] = 0
+				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])
 			print(bulk_load_http_status)
 
+
 			if response["errors"] == True:
-				log.critical("bulk_load_error", bulk_load_http_status=bulk_load_http_status)
+				log.critical("bulk_load_error")
 			else:
-				log.critical("bulk_load_successful", bulk_load_http_status=bulk_load_http_status)
+				log.critical("bulk_load_successful")
 				file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 				delete_file_urls(file_urls, s3)
 				log.critical("process_results", file_count=len(file_text))
