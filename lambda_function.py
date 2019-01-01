@@ -18,8 +18,12 @@ def lambda_handler(event, context):
 		if context is not None:
 			aws_request_id = context.aws_request_id
 
+		shard = ""
+		if "shard" in os.environ:
+			shard = os.environ["shard"] + "/"
+
 		start = datetime.datetime.now()
-		print("Started " + str(start) + " " + aws_request_id)
+		print("Started " + str(start) + " " + shard + " " + aws_request_id)
 		if "text_logging" in os.environ:
 			log = structlog.get_logger()
 		else:
@@ -30,9 +34,7 @@ def lambda_handler(event, context):
 			raise Exception("chunk_size environment variable not set")
 		chunk_size = int(os.environ['chunk_size'])
 
-		shard = ""
-		if "shard" in os.environ:
-			shard = os.environ["shard"] + "/"
+
 
 		print("Getting files to check chunk size")
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/" + shard, s3, chunk_size)
@@ -72,7 +74,7 @@ def lambda_handler(event, context):
 		
 
 		log.critical("finished")
-		print("Finished " + str(start) + " " + aws_request_id)
+		print("Finished " + str(start) + " " + shard + " " + aws_request_id)
 
 	except Exception as e:
 		log.exception()
