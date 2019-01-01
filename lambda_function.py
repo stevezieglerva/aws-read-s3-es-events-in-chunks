@@ -41,7 +41,7 @@ def lambda_handler(event, context):
 #			log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
 			es_bulk_data = format_for_es_bulk(file_text)
-			create_s3_text_file("code-index", "es-bulk-files-output/es_bulk_" + str(uuid.uuid4()) + " .json", es_bulk_data, s3)
+			create_s3_text_file("code-index", "es-bulk-files-output/es_bulk_" + str(uuid.uuid4()) + ".json", es_bulk_data, s3)
 			esl = ESLambdaLog()
 			response = esl.load_bulk_data(es_bulk_data)
 

@@ -25,12 +25,12 @@ class TestMethods(unittest.TestCase):
 		directory = "es-bulk-files-input"
 		chunk_size = 5
 		s3 = boto3.resource("s3")
-		create_s3_text_file("code-index", directory + "/test_integration_a_1.txt", "file contents 1", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_a_2.txt", "file contents 2", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_a_3.txt", "file contents 3", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_a_4.txt", "file contents 4", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_a_5.txt", "file contents 5", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_a_6.txt", "file contents 6", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_1.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_2.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_3.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_4.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_5.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_6.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
 
 		# Act
 		result = get_files_from_bucket_directory(bucket, "es-bulk-files-input/", s3, chunk_size)
@@ -44,12 +44,12 @@ class TestMethods(unittest.TestCase):
 		directory = "es-bulk-files-input"
 		chunk_size = 5
 		s3 = boto3.resource("s3")
-		create_s3_text_file("code-index", directory + "/test_integration_b_1.txt", "file contents 1", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_b_2.txt", "file contents 2", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_b_3.txt", "file contents 3", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_b_4.txt", "file contents 4", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_b_5.txt", "file contents 5", s3)
-		create_s3_text_file("code-index", directory + "/test_integration_b_6.txt", "file contents 6", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_1.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_2.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_3.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_4.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_5.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
+		create_s3_text_file("code-index", directory + "/test_integration_a_6.txt", "{\"_index\": \"code-index\", \"_id\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"data\": {\"filename\": \"https://s3.amazonaws.com/code-index/prep-output/8_2019-01-01-_91440.txt\", \"file_text\": \"Test 8 \\n\", \"@timestamp\": \"2019-01-01T14:16:14.983763\", \"@timestamp_local\": \"2019-01-01T09:16:14.983763\"}}", s3)
 
 		# Act
 		result = get_files_text_from_bucket_directory(bucket, "es-bulk-files-input/", s3, chunk_size)
