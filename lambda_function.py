@@ -28,6 +28,7 @@ def lambda_handler(event, context):
 			log = structlog.get_logger()
 		else:
 			log = setup_logging("aws-read-s3-es-events-in-chunks", event, aws_request_id)
+		print("Logging set up")
 
 		s3 = boto3.resource("s3")
 		if "chunk_size" not in os.environ:
