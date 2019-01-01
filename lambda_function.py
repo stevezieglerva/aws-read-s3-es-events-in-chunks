@@ -34,9 +34,9 @@ def lambda_handler(event, context):
 			raise Exception("chunk_size environment variable not set")
 		chunk_size = int(os.environ['chunk_size'])
 
-		print("Getting files to check chunk size")
+		print("\tGetting files to check chunk size")
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/" + shard, s3, chunk_size)
-		print("Finished getting files")
+		print("\tFinished getting files")
 		if len(file_text) == chunk_size:
 #			log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
@@ -67,7 +67,7 @@ def lambda_handler(event, context):
 			elapsed = end - start
 			log.critical("processing_speed", chunk_size=chunk_size, successful_loaded_into_es=bulk_load_http_status["200"], elapsed_seconds=elapsed.seconds, docs_per_second=bulk_load_http_status["200"]/elapsed.seconds)
 		else:
-			print("Skpping since only " + str(len(file_text)) + " files available")
+			print("\tSkpping since only " + str(len(file_text)) + " files available")
 #			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
 		
 
@@ -136,7 +136,7 @@ def format_for_es_bulk(file_text):
 			data_str = json.dumps(data)
 			new_bulk_item = bulk_format_template.format(index, id, data_str)
 			bulk_data = bulk_data + new_bulk_item + "\n"
-			print("\tAdded to bulk: " + file)
+			print("\t\tAdded to bulk: " + file)
 		else:
-			print("\tSkipping: " + file)
+			print("\t\tSkipping: " + file)
 	return bulk_data
