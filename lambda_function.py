@@ -38,14 +38,12 @@ def lambda_handler(event, context):
 		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/" + shard, s3, chunk_size)
 		print("Finished getting files")
 		if len(file_text) == chunk_size:
-			log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
+#			log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
 
 			es_bulk_data = format_for_es_bulk(file_text)
 			create_s3_text_file("code-index", "es-bulk-files-output/es_bulk_" + str(uuid.uuid4()) + " .json", es_bulk_data, s3)
 			esl = ESLambdaLog()
 			response = esl.load_bulk_data(es_bulk_data)
-			#print("bulk_data_response: ")
-			#print(json.dumps(response, indent=3))
 
 			bulk_load_http_status = {}
 			bulk_load_http_status["100"] = 0
@@ -57,20 +55,20 @@ def lambda_handler(event, context):
 				http_status = index_result["index"]["status"]
 				http_group = str(http_status)[0] + "00"
 				bulk_load_http_status[http_group] = bulk_load_http_status[http_group] + 1
-				if http_group != "200":
-					log.critical("bulk_index_item_failed", http_status_range=http_group, indexed_item=json.dumps(index_result))
-			for check in ["100", "200", "300", "400", "500"]:
-				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])					
+#				if http_group != "200":
+#					log.critical("bulk_index_item_failed", http_status_range=http_group, indexed_item=json.dumps(index_result))
+#			for check in ["100", "200", "300", "400", "500"]:
+#				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])					
 			print(bulk_load_http_status)
 			file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 			delete_file_urls(file_urls, s3)
-			log.critical("process_results", file_count=len(file_text))
+#			log.critical("process_results", file_count=len(file_text))
 			end = datetime.datetime.now()		
 			elapsed = end - start
 			log.critical("processing_speed", chunk_size=chunk_size, successful_loaded_into_es=bulk_load_http_status["200"], elapsed_seconds=elapsed.seconds, docs_per_second=bulk_load_http_status["200"]/elapsed.seconds)
 		else:
 			print("Skpping since only " + str(len(file_text)) + " files available")
-			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
+#			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
 		
 
 		log.critical("finished")

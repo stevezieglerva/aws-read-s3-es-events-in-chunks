@@ -23,6 +23,7 @@ REM Upload the new code
 call aws lambda update-function-code --function-name %function_name% --zip-file fileb://lambda_function.zip
 call aws lambda update-function-code --function-name %function_name%-s2 --zip-file fileb://lambda_function.zip
 call aws lambda update-function-code --function-name %function_name%-s3 --zip-file fileb://lambda_function.zip
+call aws lambda update-function-code --function-name %function_name%-s4 --zip-file fileb://lambda_function.zip
 goto end
 
 :failed_tests
