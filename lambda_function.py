@@ -72,7 +72,7 @@ def lambda_handler(event, context):
 			print("\tProcessing speed: docs_per_second= " + str(bulk_load_http_status["200"]/elapsed.seconds))
 			#log.critical("processing_speed", chunk_size=chunk_size, successful_loaded_into_es=bulk_load_http_status["200"], elapsed_seconds=elapsed.seconds, docs_per_second=bulk_load_http_status["200"]/elapsed.seconds)
 		else:
-			print("\tSkpping since only " + str(len(file_text)) + " files available")
+			print("\tSkipping since only " + str(len(file_text)) + " files available")
 #			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
 		
 
