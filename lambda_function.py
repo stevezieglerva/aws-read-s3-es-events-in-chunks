@@ -23,7 +23,7 @@ def lambda_handler(event, context):
 			shard = os.environ["shard"] + "/"
 
 		start = datetime.datetime.now()
-		print("Started " + str(start) + " " + shard + " " + aws_request_id)
+		print("Started " + str(datetime.datetime.now()) + " " + shard + " " + aws_request_id)
 		if "text_logging" in os.environ:
 			log = structlog.get_logger()
 		else:
@@ -77,7 +77,7 @@ def lambda_handler(event, context):
 		
 
 #		log.critical("finished")
-		print("Finished " + str(start) + " " + shard + " " + aws_request_id)
+		print("Finished " + str(datetime.datetime.now()) + " " + shard + " " + aws_request_id)
 
 	except Exception as e:
 		log.exception()
