@@ -58,15 +58,15 @@ def lambda_handler(event, context):
 				bulk_load_http_status[http_group] = bulk_load_http_status[http_group] + 1
 #				if http_group != "200":
 #					log.critical("bulk_index_item_failed", http_status_range=http_group, indexed_item=json.dumps(index_result))
-#			for check in ["100", "200", "300", "400", "500"]:
-#				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])					
+			for check in ["100", "200", "300", "400", "500"]:
+				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])					
 			print(bulk_load_http_status)
 			file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 			delete_file_urls(file_urls, s3)
 #			log.critical("process_results", file_count=len(file_text))
 			end = datetime.datetime.now()		
 			elapsed = end - start
-			log.critical("processing_speed", chunk_size=chunk_size, successful_loaded_into_es=bulk_load_http_status["200"], elapsed_seconds=elapsed.seconds, docs_per_second=bulk_load_http_status["200"]/elapsed.seconds)
+			#log.critical("processing_speed", chunk_size=chunk_size, successful_loaded_into_es=bulk_load_http_status["200"], elapsed_seconds=elapsed.seconds, docs_per_second=bulk_load_http_status["200"]/elapsed.seconds)
 		else:
 			print("\tSkpping since only " + str(len(file_text)) + " files available")
 #			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
