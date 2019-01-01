@@ -72,7 +72,7 @@ def lambda_handler(event, context):
 		
 
 		log.critical("finished")
-		print("Finished " + str(start) + " " + aws_request_id")
+		print("Finished " + str(start) + " " + aws_request_id)
 
 	except Exception as e:
 		log.exception()
