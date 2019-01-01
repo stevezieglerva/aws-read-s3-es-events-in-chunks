@@ -18,6 +18,7 @@ def lambda_handler(event, context):
 		if context is not None:
 			aws_request_id = context.aws_request_id
 
+		start = datetime.datetime.now()
 		print("Started")
 		if "text_logging" in os.environ:
 			log = structlog.get_logger()
@@ -64,9 +65,14 @@ def lambda_handler(event, context):
 			file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 			delete_file_urls(file_urls, s3)
 			log.critical("process_results", file_count=len(file_text))
+			end = datetime.datetime.now()		
+			elapsed = end - start
+			log.critical("processing_speed", chunk_size=chunk_size, successful_loaded_into_es=bulk_load_http_status["200"], elapsed_seconds=elapsed.seconds, docs_per_second=bulk_load_http_status["200"]/elapsed.seconds)
 		else:
 			print("Skpping since only " + str(len(file_text)) + " files available")
 			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
+		
+
 		log.critical("finished")
 		print("Finished")
 
