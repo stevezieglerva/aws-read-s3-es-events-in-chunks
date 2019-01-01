@@ -98,7 +98,8 @@ def setup_logging(lambda_name, lambda_event, aws_request_id):
 			structlog.processors.TimeStamper(fmt="iso"),
 			structlog.processors.StackInfoRenderer(),
 			structlog.processors.format_exc_info,
-			structlog.processors.UnicodeDecoder()
+			structlog.processors.UnicodeDecoder(),
+			structlog.processors.JSONRenderer()
 		],
 		context_class=dict,
 		logger_factory=structlog.stdlib.LoggerFactory(),
