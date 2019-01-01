@@ -19,7 +19,7 @@ def lambda_handler(event, context):
 			aws_request_id = context.aws_request_id
 
 		start = datetime.datetime.now()
-		print("Started")
+		print("Started " + str(start) + aws_request_id)
 		if "text_logging" in os.environ:
 			log = structlog.get_logger()
 		else:
