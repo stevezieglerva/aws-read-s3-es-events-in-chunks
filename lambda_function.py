@@ -18,12 +18,8 @@ def lambda_handler(event, context):
 		if context is not None:
 			aws_request_id = context.aws_request_id
 
-		shard = ""
-		if "shard" in os.environ:
-			shard = os.environ["shard"] + "/"
-
 		start = datetime.datetime.now()
-		print("Started " + str(datetime.datetime.now()) + " " + shard + " " + aws_request_id)
+		print("Started " + str(datetime.datetime.now()) + " " + aws_request_id)
 		if "text_logging" in os.environ:
 			log = structlog.get_logger()
 		else:
@@ -31,21 +27,15 @@ def lambda_handler(event, context):
 		print("Logging set up")
 
 		s3 = boto3.resource("s3")
-		if "chunk_size" not in os.environ:
-			raise Exception("chunk_size environment variable not set")
-		chunk_size = int(os.environ['chunk_size'])
-
-		print("\tGetting files to check chunk size")
-		file_text = get_files_text_from_bucket_directory("code-index", "es-bulk-files-input/" + shard, s3, chunk_size)
-		print("\tFinished getting files")
-		if len(file_text) == chunk_size:
-#			log.critical("file_count_from_chunk", file_count=len(file_text), chunk_size=chunk_size)
-
-			es_bulk_data = format_for_es_bulk(file_text)
-			create_s3_text_file("code-index", "es-bulk-files-output/es_bulk_" + str(uuid.uuid4()) + ".json", es_bulk_data, s3)
+		files =  get_files_from_s3_lambda_event(event)
+		for file_url in files.keys():
+			url_array = [1]
+			url_array[0] = file_url
+			file_text = get_file_text_from_s3_urls(url_array, s3)
 			esl = ESLambdaLog()
+			es_bulk_data = file_text[file_url]
+			print("Text to index: " + es_bulk_data)
 			response = esl.load_bulk_data(es_bulk_data)
-
 			bulk_load_http_status = {}
 			bulk_load_http_status["100"] = 0
 			bulk_load_http_status["200"] = 0
@@ -56,28 +46,16 @@ def lambda_handler(event, context):
 				http_status = index_result["index"]["status"]
 				http_group = str(http_status)[0] + "00"
 				bulk_load_http_status[http_group] = bulk_load_http_status[http_group] + 1
-#				if http_group != "200":
-#					log.critical("bulk_index_item_failed", http_status_range=http_group, indexed_item=json.dumps(index_result))
 			for check in ["100", "200", "300", "400", "500"]:
 				log.critical("bulk_http_status", http_status_range=check, http_status_count=bulk_load_http_status[check])					
 			print(bulk_load_http_status)
 			file_urls = extract_s3_url_list_from_file_text_dict(file_text)
 			delete_file_urls(file_urls, s3)
-#			log.critical("process_results", file_count=len(file_text))
 			end = datetime.datetime.now()		
 			elapsed = end - start
-			print("\tProcessing speed: chunk_size= " + str(chunk_size))
-			print("\tProcessing speed: successful_loaded_into_es= " + str(bulk_load_http_status["200"]))
-			print("\tProcessing speed: elapsed_seconds= " + str(elapsed.seconds))
-			print("\tProcessing speed: docs_per_second= " + str(bulk_load_http_status["200"]/elapsed.seconds))
-			#log.critical("processing_speed", chunk_size=chunk_size, successful_loaded_into_es=bulk_load_http_status["200"], elapsed_seconds=elapsed.seconds, docs_per_second=bulk_load_http_status["200"]/elapsed.seconds)
-		else:
-			print("\tSkipping since only " + str(len(file_text)) + " files available")
-#			log.critical("skipping_not_enough", files_count_so_far=len(file_text))
-		
 
 #		log.critical("finished")
-		print("Finished " + str(datetime.datetime.now()) + " " + shard + " " + aws_request_id)
+		print("Finished " + str(datetime.datetime.now()) + " " + aws_request_id)
 
 	except Exception as e:
 		log.exception()
