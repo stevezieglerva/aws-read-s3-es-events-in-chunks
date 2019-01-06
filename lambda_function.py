@@ -29,12 +29,12 @@ def lambda_handler(event, context):
 		s3 = boto3.resource("s3")
 		files =  get_files_from_s3_lambda_event(event)
 		for file_url in files.keys():
+			log.critical("processing_file", file=file_url)
 			url_array = [1]
 			url_array[0] = file_url
 			file_text = get_file_text_from_s3_urls(url_array, s3)
 			esl = ESLambdaLog()
 			es_bulk_data = file_text[file_url]
-			print("Text to index: " + es_bulk_data)
 			response = esl.load_bulk_data(es_bulk_data)
 			bulk_load_http_status = {}
 			bulk_load_http_status["100"] = 0
