@@ -29,7 +29,8 @@ def lambda_handler(event, context):
 		s3 = boto3.resource("s3")
 		files =  get_files_from_s3_lambda_event(event)
 		for file_url in files.keys():
-			log.critical("processing_file", file=file_url)
+			log = log.bind(file=file_url)
+			log.critical("processing_file")
 			url_array = [1]
 			url_array[0] = file_url
 			file_text = get_file_text_from_s3_urls(url_array, s3)
