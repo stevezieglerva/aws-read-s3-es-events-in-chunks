@@ -55,7 +55,7 @@ def lambda_handler(event, context):
 			end = datetime.datetime.now()		
 			elapsed = end - start
 
-#		log.critical("finished")
+		log.critical("finished")
 		print("Finished " + str(datetime.datetime.now()) + " " + aws_request_id)
 
 	except Exception as e:
